@@ -16,6 +16,18 @@ const getUsersHandler=(res,req)=>{//this is a normal function not a middelware
     res.write(JSON.stringify(users))
     res.end()
 }
+const createUserHandler=(res,req)=>{//this is a function used for post the data to the server
+    let body=''
+    req.on('data',(chunk)=>{
+        body+=chunk.toString()
+    })
+    req.on('end',()=>{
+        const user=JSON.parse(body)
+        users.push(user)
+        res.write(JSON.stringify(users))
+        res.end()
+    })
+}
 const userbyId=(res,req)=>{//this is a normal function not a middelware
     const id=req.url.split('/')[3]
     const user=users.find((user)=>user.id===parseInt(id))
@@ -39,7 +51,11 @@ logger(res,req,()=>{
             getUsersHandler(res,req)
         } else if(req.url.match(/\/api\/users\/([0-9]+)/)&& req.method==="GET"){
             userbyId(res,req)
-        }else{
+        }else if(req.url==="/api/users" && req.method==="POST"){
+            
+            createUserHandler(res,req)
+        }
+        else{
             notFoundhandler(res,req)
         }
     })
