@@ -24,7 +24,7 @@ const createUserHandler=(res,req)=>{//this is a function used for post the data 
     req.on('end',()=>{
         const user=JSON.parse(body)
         users.push(user)
-        res.write(JSON.stringify(users))
+        res.write(JSON.stringify(user))
         res.end()
     })
 }
